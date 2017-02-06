@@ -11,6 +11,8 @@ public class AgrawalGarmentsImtApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		
+		System.out.println("hrllotest!");
 	}
 
 }
