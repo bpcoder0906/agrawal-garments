@@ -1,8 +1,8 @@
 package com.agrawal.imt.model.invoces;
 
-import com.agrawal.imt.model.users.Column;
-import com.agrawal.imt.model.users.GeneratedValue;
-import com.agrawal.imt.model.users.Id;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 public class Invoice {
 	
