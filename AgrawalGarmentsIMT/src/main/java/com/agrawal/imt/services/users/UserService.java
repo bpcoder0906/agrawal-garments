@@ -1,5 +1,7 @@
 package com.agrawal.imt.services.users;
 
+import java.util.Iterator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +22,26 @@ public class UserService {
 		}
 		return true;
 	}
+	
+	public boolean findUser(User user){
+		try {
+			Iterable<User> results=_userRepository.findAll();
+			
+			Iterator<User> iter = results.iterator();
+			while(iter.hasNext()){
+				User usr=iter.next();
+				if(usr.getUserName().equals(user.getUserName()) && usr.getPassword().equals(user.getPassword())){
+					return true;
+				}
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+		return false;
+	}
+	
+	
 
 }

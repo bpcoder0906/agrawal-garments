@@ -1,4 +1,4 @@
-package com.agrawal.imt.controller.rest.v1;
+package com.agrawal.imt.controller.rest.v1.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,16 +10,24 @@ import com.agrawal.imt.model.users.User;
 import com.agrawal.imt.services.users.UserService;
 
 @RestController
-@RequestMapping(value = "user.html")
+@RequestMapping(value = "userActions.html")
 public class UserRestController {
 
 	@Autowired
 	UserService _userService;
 
-	@RequestMapping(value = "", method = RequestMethod.POST, consumes = { "application/json",
-			"application/xml" }, produces = { "application/json", "application/xml" })
+	@RequestMapping(value = "create", method = RequestMethod.POST, consumes = { "application/json" }, produces = {
+			"application/json" })
 	public boolean createUser(@RequestBody User user) {
 		return _userService.createUser(user);
+
+	}
+
+	@RequestMapping(value = "login", method = RequestMethod.POST, consumes = { "application/json" }, produces = {
+			"application/json" })
+	public boolean loginUser(@RequestBody User user) {
+		
+		return _userService.findUser(user);
 
 	}
 }
