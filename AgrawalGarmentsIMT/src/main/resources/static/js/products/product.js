@@ -1,74 +1,118 @@
 /**
  * 
  */
-
-// IIFE - Immediately Invoked Function Expression
 (function($, window, document) {
 
 	// The $ is now locally scoped
 
 	// Listen for the jQuery ready event on the document
 	$(function() {
+		var url;
+		function newProduct() {
+			$('#dlg').dialog('open').dialog('setTitle', 'New Product');
+			$('#fm').form('clear');
+			url = 'productActions.html/add';
+		}
+		function editProduct() {
+			var row = $('#dg').datagrid('getSelected');
+			if (row) {
+				$('#dlg').dialog('open').dialog('setTitle', 'Edit Product');
+				$('#fm').form('load', row);
+				url = 'productActions.html/update?id=' + row.id;
+			}
+		}
+		function saveProduct() {
 
-		function userLogin(dynamicData) {
+			if ($("#fm").form('validate')) {
+				var dynamicData = {};
 
-			return $.ajax({
-				
-				headers: {
-			        'Accept': 'application/json',
-			        'Content-Type': 'application/json'
-				},
-				url : "productActions.html/add",
-				type : "POST",
-				data :dynamicData
-			});
+				dynamicData = JSON.stringify(ConvertFormToJSON($("#fm")));
+
+				console.log(dynamicData);
+				$.ajax({
+
+					headers : {
+						'Accept' : 'application/json',
+						'Content-Type' : 'application/json'
+					},
+					url : url,
+					type : "POST",
+					data : dynamicData,
+					success : function(res) {
+						alert(res);
+
+						$('#dlg').dialog('close'); // close the dialog
+						$('#dg').datagrid('reload'); // reload the data
+					}
+				});
+
+			} else {
+				$.messager.show({
+					title : 'Error',
+					msg : "Please Enter Product details correctly!"
+				});
+			}
+
+			function ConvertFormToJSON(form) {
+				var array = jQuery(form).serializeArray();
+				var json = {};
+
+				jQuery.each(array, function() {
+					json[this.name] = this.value || '';
+				});
+
+				return json;
+			}
+
 		}
 
-		var ele = $("#addproduct-btn");
-		ele.on({ "click" : function() {
-			console.log("product request***");
-			var dynamicData={};
+		function destroyProduct() {
+			var row = $('#dg').datagrid('getSelected');
+			if (row) {
+				$.messager
+						.confirm(
+								'Confirm',
+								'Are you sure you want to ddelte the Product?',
+								function(r) {
+									if (r) {
 
-			dynamicData=JSON.stringify(ConvertFormToJSON($("#addProductForm")));
-			
-			console.log(dynamicData);
+										$.ajax({
 
-			var response = userLogin(dynamicData);
+													headers : {
+														'Accept' : 'application/json',
+														'Content-Type' : 'application/json'
+													},
+													url : 'productActions.html/delete?id='
+															+ row.id,
+													type : 'POST',
 
-			response.done(function(data) {
-				// Updates the UI based the ajax result
-				
-				if(data==true){
-					//window.location.href = "/dashboard.html"; 
-					alert("Product entered successfully!");
-				}else{
-					alert("Invalid Product Entry!");
-				}
-				
-			});
+													success : function(res) {
+														alert(res);
+														if (res == true) {
+															$('#dlg').dialog(
+																	'close'); // close
+																				// the
+															// dialog
+															$('#dg').datagrid(
+																	'reload'); // reload
+															// the data
+														} else {
+															$.messager
+																	.show({ // show
+																			// error
+																			// message
+																		title : 'Error',
+																		msg : "Error while updating product!"
+																	});
+														}
 
-			response.fail(function(data) {
-				// Updates the UI based the ajax result
-				alert(data);
-			});
-
+													}
+												});
+									}
+								});
 			}
-		});
-		
-		function ConvertFormToJSON(form){
-		    var array = jQuery(form).serializeArray();
-		    var json = {};
-		    
-		    jQuery.each(array, function() {
-		        json[this.name] = this.value || '';
-		    });
-		    
-		    return json;
 		}
 
 	});
-
-	// The rest of the code goes here!
-
 }(window.jQuery, window, document));
 // The global jQuery object is passed as a parameter

@@ -1,0 +1,164 @@
+/**
+ * 
+ */
+
+// IIFE - Immediately Invoked Function Expression
+(function($, window, document) {
+
+	// The $ is now locally scoped
+
+	// Listen for the jQuery ready event on the document
+	$(function() {
+
+		function getAllProducts() {
+			return $.ajax({
+
+				headers : {
+					'Accept' : 'application/json',
+					'Content-Type' : 'application/json'
+				},
+				url : "productActions.html/getAllProducts",
+				type : "GET"
+			});
+		}
+
+		getAllProducts()
+				.done(
+						function(data) {
+							// Updates the UI based the ajax result
+
+							var productArray = [];
+
+							$.each(data,
+											function(index, value) {
+
+												productArray.push('<tr>');
+												productArray.push('<td>'
+														+ value.barcode + '</td>');
+												productArray.push('<td>'
+														+ value.name + '</td>');
+												productArray
+														.push('<td>'
+																+ value.price
+																+ '</td>');
+												productArray
+												.push('<td>'
+														+ value.color
+														+ '</td>');
+												productArray
+												.push('<td>'
+														+ value.size
+														+ '</td>');
+												productArray
+												.push('<td>'
+														+ value.qty
+														+ '</td>');
+												
+												productArray
+												.push('<td>'
+														+ value.description
+														+ '</td>');
+												productArray
+														.push('<td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs"  id="editProduct-btn"> <span class="fa fa-edit "></span> Edit </button></p></td>');
+
+												productArray
+														.push('<td><p data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" data-target="#delete"> <span class="fa fa-trash "></span> Delete </button></p></td>');
+
+												productArray.push('<tr>');
+
+											});
+
+							$("#productTable").append(productArray.join(''));
+
+						});
+		
+		$("#editProduct-btn").on({
+			"click" : function() {
+				
+				alert("f");
+				populate($("#editProductForm"), data);
+				
+			}
+		});
+		
+		
+		
+		function populate(frm, data) {   
+		    $.each(data, function(key, value) {  
+		        var ctrl = $('[name='+key+']', frm);  
+		        switch(ctrl.prop("type")) { 
+		            case "radio": case "checkbox":   
+		                ctrl.each(function() {
+		                    if($(this).attr('value') == value) $(this).attr("checked",value);
+		                });   
+		                break;  
+		            default:
+		                ctrl.val(value); 
+		        }  
+		    });  
+		}
+
+		function addProduct(dynamicData) {
+
+			return $.ajax({
+
+				headers : {
+					'Accept' : 'application/json',
+					'Content-Type' : 'application/json'
+				},
+				url : "productActions.html/add",
+				type : "POST",
+				data : dynamicData
+			});
+		}
+
+		var ele = $("#addproduct-btn");
+		ele.on({
+			"click" : function() {
+				console.log("product request***");
+				var dynamicData = {};
+
+				dynamicData = JSON
+						.stringify(ConvertFormToJSON($("#addProductForm")));
+
+				console.log(dynamicData);
+
+				var response = addProduct(dynamicData);
+
+				response.done(function(data) {
+					// Updates the UI based the ajax result
+
+					if (data == true) {
+						// window.location.href = "/dashboard.html";
+						alert("Product entered successfully!");
+					} else {
+						alert("Invalid Product Entry!");
+					}
+
+				});
+
+				response.fail(function(data) {
+					// Updates the UI based the ajax result
+					alert(data);
+				});
+
+			}
+		});
+
+		function ConvertFormToJSON(form) {
+			var array = jQuery(form).serializeArray();
+			var json = {};
+
+			jQuery.each(array, function() {
+				json[this.name] = this.value || '';
+			});
+
+			return json;
+		}
+
+	});
+
+	// The rest of the code goes here!
+
+}(window.jQuery, window, document));
+// The global jQuery object is passed as a parameter

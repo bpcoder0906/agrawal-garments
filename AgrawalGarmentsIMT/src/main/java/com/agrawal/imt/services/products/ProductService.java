@@ -23,6 +23,24 @@ public class ProductService {
 		}
 		return true;
 	}
+	
+	public boolean updateProduct(Product product) {
+		try {
+			_productRepository.save(product);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean deleteProduct(long productId) {
+		try {
+			_productRepository.delete(productId);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
 
 	public List<Product> getAllProductsList() {
 		List<Product> productList = new ArrayList<>();
@@ -33,4 +51,18 @@ public class ProductService {
 		}
 		return productList;
 	}
+	
+	public Product getProductByBarcode(long barcode) {
+		try {
+			List<Product> productList  = (List<Product>) _productRepository.findAll();
+			for(Product pdt:productList){
+				if(pdt.getBarcode()==barcode){
+					return pdt;
+				}
+			}
+		} catch (Exception e) {
+		}
+		return null;
+	}
+	
 }

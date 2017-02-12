@@ -23,8 +23,85 @@
 <link href="css/font-awesome/css/font-awesome.min.css" rel="stylesheet"
 	type="text/css">
 
-<!-- Datatable CSS -->
-<link href="css/dataTables.bootstrap.min.css" rel="stylesheet">
+<!-- EasyUi css -->
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/themes/icon.css">
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/themes/color.css">
+<!-- <link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/demo/demo.css"> -->
+
+
+<!-- jQuery -->
+<script src="js/jquery/jquery.min.js"></script>
+
+<!-- EasyUi js -->
+<script type="text/javascript"
+	src="http://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript">
+	$.extend($.fn.datagrid.defaults, {
+		loader : function(param, success, error) {
+			var opts = $(this).datagrid('options');
+			if (!opts.url)
+				return false;
+			$.ajax({
+
+				headers : {
+
+					'Content-Type' : 'application/json',
+					'Accept' : 'application/json'
+				},
+				type : opts.method,
+				url : opts.url,
+				data : param,
+				dataType : 'json',
+				success : function(data) {
+					success(data);
+				},
+				error : function() {
+					error.apply(this, arguments);
+				}
+			});
+		}
+	})
+</script>
+<style type="text/css">
+#fm {
+	margin: 0;
+	padding: 10px 30px;
+}
+
+.ftitle {
+	font-size: 14px;
+	font-weight: bold;
+	padding: 5px 0;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.fitem {
+	margin-bottom: 5px;
+}
+
+.fitem label {
+	display: inline-block;
+	width: 200px;
+}
+
+.fitem input {
+	width: 260px;
+	height: 30px;
+}
+
+.fitem textarea {
+	width: 260px;
+	height: 50px;
+}
+</style>
+
+
 
 </head>
 
@@ -77,8 +154,8 @@
 
 						<li><a href="products.html"><i class="fa fa-list-alt"></i>
 								Products</a></li>
-						<li><a href="forms.html"><i class="fa  fa-credit-card"></i>
-								Billing</a></li>
+						<li><a href="salesinvoice.html"><i class="fa  fa-credit-card"></i>
+								Sales Invoice</a></li>
 
 
 					</ul>
@@ -91,7 +168,7 @@
 		<div id="page-wrapper">
 			<div class="row">
 				<div class="col-lg-12">
-					<h1 class="page-header">Products Inventory</h1>
+					<h1 class="page-header">Products Inventory Panel</h1>
 				</div>
 				<!-- /.col-lg-12 -->
 			</div>
@@ -99,230 +176,211 @@
 			<div class="row">
 				<div class="col-lg-12">
 
-					<div class="panel panel-default">
-						<div class="panel-heading">Products Inventory Panel</div>
-						<div style="margin: 10px">
-							<button class="btn btn-success" data-toggle="modal" data-target="#addProduct">Add Products</button>
-						</div>
-						
-						<!-- /.panel-heading -->
-						<div class="panel-body">
-							<div class="table-responsive">
-								<table id="productTable" class="table table-striped table-bordered table-hover" id="dataTables-example">
-									<thead>
-										<th>Product Name</th>
-										<th>Price</th>
-										<th>Color</th>
-										<th>Size</th>
-										<th>Description</th>
-										<th>Stock</th>
-										<th>Edit</th>
-										<th>Delete</th>
-									</thead>
-									<tbody>
-										<tr>
-											<td>Mohsin</td>
-											<td>Irshad</td>
-											<td>CB 106/107 Street # 11 Wah Cantt Islamabad Pakistan</td>
-											<td>isometric.mohsin@gmail.com</td>
-											<td>+923335586757</td>
-											<td>+923335586757</td>
-											<td><p data-placement="top" data-toggle="tooltip"
-													title="Edit">
-													<button class="btn btn-primary btn-xs" data-title="Edit"
-														data-toggle="modal" data-target="#edit">
-														<span class="fa fa-edit "></span> Edit
-													</button>
-												</p></td>
-											<td><p data-placement="top" data-toggle="tooltip"
-													title="Delete">
-													<button class="btn btn-danger btn-xs" data-title="Delete"
-														data-toggle="modal" data-target="#delete">
-														<span class="fa fa-trash"></span> Delete
-													</button>
-												</p></td>
-										</tr>
-									</tbody>
-								</table>
-								<div class="clearfix"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+					<!-- Product Datagrid -->
 
-
-<!-- Add product modal -->
-<div class="modal fade" id="addProduct" tabindex="-1" role="dialog"
-			aria-labelledby="addProduct" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-hidden="true">
-							<span class="fa  fa-times " aria-hidden="true"></span>
-						</button>
-						<h4 class="modal-title custom_align" id="Heading">Add Product
-							Details</h4>
+					<table id="dg" title="Products List" class="easyui-datagrid"
+						style="width: 900px; height: 400px"
+						url="productActions.html/getAllProducts" toolbar="#toolbar"
+						pagination="true" rownumbers="true" fitColumns="true"
+						singleSelect="true">
+						<thead>
+							<tr>
+								<th field="barcode" width="auto">Barcode</th>
+								<th field="name" width="50">Product Name</th>
+								<th field="price" width="50">Price</th>
+								<th field="size" width="50">Size</th>
+								<th field="qty" width="50">Stock</th>
+								<th field="color" width="50">Color</th>
+								<th field="description" width="80">Description</th>
+							</tr>
+						</thead>
+					</table>
+					<div id="toolbar">
+						<a href="javascript:void(0)" class="easyui-linkbutton"
+							iconCls="icon-add" plain="true" onclick="newProduct()">New
+							Product</a> <a href="javascript:void(0)" class="easyui-linkbutton"
+							iconCls="icon-edit" plain="true" onclick="editProduct()">Edit
+							Product</a> <a href="javascript:void(0)" class="easyui-linkbutton"
+							iconCls="icon-remove" plain="true" onclick="destroyProduct()">Remove
+							Product</a>
 					</div>
-					<div class="modal-body">
-						
-						<form id="addProductForm">
-							<div class="form-group">
-								 <label>Barcode:</label>
-								 <input class="form-control "  type="text" placeholder="barcode number" name="barcode">
+
+					<div id="dlg" class="easyui-dialog"
+						style="width: 800px; height: 500px; padding: 10px 20px"
+						closed="true" buttons="#dlg-buttons">
+						<div class="ftitle">Product Information</div>
+						<form id="fm" method="post" novalidate>
+							<div class="fitem">
+								<label>Product Barcode:</label> <input name="barcode"
+									class="easyui-textbox" required="true">
 							</div>
-							<div class="form-group">
-								 <label>Product Name:</label>
-								 <input class="form-control "  type="text" placeholder="product name" name="name">
+							<div class="fitem">
+								<label>Product Name:</label> <input name="name"
+									class="easyui-textbox" required="true">
 							</div>
-							<div class="form-group">
-								 <label>Product Price(MRP):</label>
-								 <input class="form-control "  type="text" placeholder="product price" name="price">
+							<div class="fitem">
+								<label>Product Price(MRP):</label> <input name="price"
+									class="easyui-textbox" required="true">
 							</div>
-							<div class="form-group">
-								 <label>Product Color:</label>
-								 <input class="form-control "  type="text" placeholder="product color" name="color">
+							<div class="fitem">
+								<label>Product Color:</label> <input name="color"
+									class="easyui-textbox">
 							</div>
-							<div class="form-group">
-								 <label>Product Size:</label>
-								 <input class="form-control "  type="text" placeholder="product size" name="size">
+							<div class="fitem">
+								<label>Product Size:</label> <input name="size"
+									class="easyui-textbox" required="true">
 							</div>
-							<div class="form-group">
-								 <label>Product Stock Quantity:</label>
-								 <input class="form-control "  type="text" placeholder="product quantity" name="qty">
+							<div class="fitem">
+								<label>Product Stock Quantity:</label> <input name="qty"
+									class="easyui-textbox" required="true">
 							</div>
-							<div class="form-group">
+							<div class="fitem">
 								<label>Product Description:</label>
-								<textarea rows="2" class="form-control"
-									placeholder="product description" name="description"></textarea>
-	
+								<textarea name="description" class="easyui-textbox"></textarea>
 							</div>
+
 						</form>
 					</div>
-					<div class="modal-footer ">
-						<button type="button" class="btn btn-success btn-lg"
-							style="width: 100%;" id="addproduct-btn">
-							<span class="fa fa-plus-circle"></span> Add Product
-						</button>
+					<div id="dlg-buttons">
+						<a href="javascript:void(0)" class="easyui-linkbutton c6"
+							iconCls="icon-ok" onclick="saveProduct()" style="width: 90px">Save</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton"
+							iconCls="icon-cancel"
+							onclick="javascript:$('#dlg').dialog('close')"
+							style="width: 90px">Cancel</a>
 					</div>
+
+
 				</div>
-				<!-- /.modal-content -->
+				<!-- /.col-lg-12 -->
 			</div>
-			<!-- /.modal-dialog -->
+			<!-- /.row -->
+
+			<!-- /.row -->
 		</div>
-
-		<div class="modal fade" id="edit" tabindex="-1" role="dialog"
-			aria-labelledby="edit" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-hidden="true">
-							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-						</button>
-						<h4 class="modal-title custom_align" id="Heading">Edit Your
-							Detail</h4>
-					</div>
-					<div class="modal-body">
-						<div class="form-group">
-							<input class="form-control " type="text" placeholder="Mohsin">
-						</div>
-						<div class="form-group">
-
-							<input class="form-control " type="text" placeholder="Irshad">
-						</div>
-						<div class="form-group">
-							<textarea rows="2" class="form-control"
-								placeholder="CB 106/107 Street # 11 Wah Cantt Islamabad Pakistan"></textarea>
-
-
-						</div>
-					</div>
-					<div class="modal-footer ">
-						<button type="button" class="btn btn-warning btn-lg"
-							style="width: 100%;">
-							<span class="glyphicon glyphicon-ok-sign"></span> Update
-						</button>
-					</div>
-				</div>
-				<!-- /.modal-content -->
-			</div>
-			<!-- /.modal-dialog -->
-		</div>
-
-
-
-		<div class="modal fade" id="delete" tabindex="-1" role="dialog"
-			aria-labelledby="edit" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-hidden="true">
-							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-						</button>
-						<h4 class="modal-title custom_align" id="Heading">Delete this
-							entry</h4>
-					</div>
-					<div class="modal-body">
-
-						<div class="alert alert-danger">
-							<span class="glyphicon glyphicon-warning-sign"></span> Are you
-							sure you want to delete this Record?
-						</div>
-
-					</div>
-					<div class="modal-footer ">
-						<button type="button" class="btn btn-success">
-							<span class="glyphicon glyphicon-ok-sign"></span> Yes
-						</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">
-							<span class="glyphicon glyphicon-remove"></span> No
-						</button>
-					</div>
-				</div>
-			</div>
-			<!-- /.col-lg-12 -->
-		</div>
-		<!-- /.row -->
-
-		<!-- /.row -->
-	</div>
-	<!-- /#page-wrapper -->
+		<!-- /#page-wrapper -->
 
 	</div>
-	
-	
-	
-	
 	<!-- /#wrapper -->
 
-	<!-- jQuery -->
-	<script src="js/jquery/jquery.min.js"></script>
+
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="js/bootstrap/bootstrap.min.js"></script>
-	
-	
-	<!-- Product js -->
-	<script src="js/products/product.js"></script>
-	
-	
-	<!--Datatable js -->
-	<!-- <script src="js/datatable/dataTables.bootstrap.min.js"></script>
-	<script src="js/datatable/jquery.dataTables.min.js"></script> -->
 
-<!-- <script type="text/javascript">
+	
+	
+	<script type="text/javascript">
+	
 
-$(document).ready(function() {
-    $('#productTable').DataTable();
-} );
- -->
-</script>
-	<!-- Custom Theme JavaScript -->
-	<!-- <script src="js/app/sb-admin-2.js"></script> -->
+	var url;
+	function newProduct() {
+		$('#dlg').dialog('open').dialog('setTitle', 'New Product');
+		$('#fm').form('clear');
+		url = 'productActions.html/add';
+	}
+	function editProduct() {
+		var row = $('#dg').datagrid('getSelected');
+		if (row) {
+			$('#dlg').dialog('open').dialog('setTitle', 'Edit Product');
+			$('#fm').form('load', row);
+			url = 'productActions.html/update?id=' + row.id;
+		}
+	}
+	function saveProduct() {
+
+		if ($("#fm").form('validate')) {
+			var dynamicData = {};
+
+			dynamicData = JSON.stringify(ConvertFormToJSON($("#fm")));
+
+			console.log(dynamicData);
+			$.ajax({
+
+				headers : {
+					'Accept' : 'application/json',
+					'Content-Type' : 'application/json'
+				},
+				url : url,
+				type : "POST",
+				data : dynamicData,
+				success : function(res) {
+					//alert(res);
+
+					$('#dlg').dialog('close'); // close the dialog
+					$('#dg').datagrid('reload'); // reload the data
+				}
+			});
+
+		} else {
+			$.messager.show({
+				title : 'Error',
+				msg : "Please Enter Product details correctly!"
+			});
+		}
+
+		function ConvertFormToJSON(form) {
+			var array = jQuery(form).serializeArray();
+			var json = {};
+
+			jQuery.each(array, function() {
+				json[this.name] = this.value || '';
+			});
+
+			return json;
+		}
+
+	}
+
+	function destroyProduct() {
+		var row = $('#dg').datagrid('getSelected');
+		if (row) {
+			$.messager
+					.confirm(
+							'Confirm',
+							'Are you sure you want to ddelte the Product?',
+							function(r) {
+								if (r) {
+
+									$.ajax({
+
+												headers : {
+													'Accept' : 'application/json',
+													'Content-Type' : 'application/json'
+												},
+												url : 'productActions.html/delete?id='
+														+ row.id,
+												type : 'POST',
+
+												success : function(res) {
+													//alert(res);
+													if (res == true) {
+														$('#dlg').dialog(
+																'close'); // close
+																			// the
+														// dialog
+														$('#dg').datagrid(
+																'reload'); // reload
+														// the data
+													} else {
+														$.messager
+																.show({ // show
+																		// error
+																		// message
+																	title : 'Error',
+																	msg : "Error while updating product!"
+																});
+													}
+
+												}
+											});
+								}
+							});
+		}
+	}
+	
+	
+	</script>
 
 </body>
 

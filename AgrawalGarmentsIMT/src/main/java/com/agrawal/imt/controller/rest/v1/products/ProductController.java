@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.agrawal.imt.model.products.Product;
@@ -24,10 +25,29 @@ public class ProductController {
 		return _productService.addProduct(product);
 	}
 
-	@RequestMapping(value = "getAllProducts", method = RequestMethod.GET, consumes = { "application/json" }, produces = {
+	@RequestMapping(value = "update", method = RequestMethod.POST, consumes = { "application/json" }, produces = {
 			"application/json" })
+	public boolean updateProduct(@RequestBody Product product, @RequestParam("id") long id) {
+		product.setId(id);
+		return _productService.updateProduct(product);
+	}
+
+	@RequestMapping(value = "delete", method = RequestMethod.POST, consumes = { "application/json" }, produces = {
+			"application/json" })
+	public boolean deleteProduct(@RequestParam("id") long id) {
+		return _productService.deleteProduct(id);
+	}
+
+	@RequestMapping(value = "getAllProducts", method = RequestMethod.POST, consumes = {
+			"application/json" }, produces = { "application/json" })
 	public List<Product> getAllProductList() {
 		return _productService.getAllProductsList();
+	}
+
+	@RequestMapping(value = "getProductByBarcode", method = RequestMethod.POST, consumes = {
+			"application/json" }, produces = { "application/json" })
+	public Product getProductByBarcode(@RequestParam("barcode") long barcode) {
+		return _productService.getProductByBarcode(barcode);
 	}
 
 }

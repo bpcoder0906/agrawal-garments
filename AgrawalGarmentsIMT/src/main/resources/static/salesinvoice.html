@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Sales Invoice | Agrawal Garments</title>
+
+<!-- Bootstrap Core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+
+<!-- Custom CSS -->
+<link href="css/sb-admin-2.css" rel="stylesheet">
+
+
+<!-- Custom Fonts -->
+<link href="css/font-awesome/css/font-awesome.min.css" rel="stylesheet"
+	type="text/css">
+
+<!-- EasyUi css -->
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/themes/icon.css">
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/themes/color.css">
+<!-- <link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/demo/demo.css"> -->
+
+
+<!-- jQuery -->
+<script src="js/jquery/jquery.min.js"></script>
+
+<!-- EasyUi js -->
+<script type="text/javascript"
+	src="http://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>
+
+<script type="text/javascript" src="js/datagrid-cellediting.js"></script>
+
+<style type="text/css">
+#fm {
+	margin: 0;
+	padding: 10px 30px;
+}
+
+.ftitle {
+	font-size: 14px;
+	font-weight: bold;
+	padding: 5px 0;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.fitem {
+	margin-bottom: 5px;
+}
+
+.fitem label {
+	display: inline-block;
+	width: 200px;
+}
+
+.fitem input {
+	width: 260px;
+	height: 30px;
+}
+
+.fitem textarea {
+	width: 260px;
+	height: 50px;
+}
+</style>
+
+</head>
+
+<body>
+
+	<div id="wrapper">
+
+		<!-- Navigation -->
+		<nav class="navbar navbar-default navbar-static-top" role="navigation"
+			style="margin-bottom: 0">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="index.html">Agrawal Garments</a>
+			</div>
+			<!-- /.navbar-header -->
+
+			<ul class="nav navbar-top-links navbar-right">
+				<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown" href="#"> <i class="fa fa-user fa-fw"></i>
+						<i class="fa fa-caret-down"></i>
+				</a>
+					<ul class="dropdown-menu dropdown-user">
+						<li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i>
+								Logout</a></li>
+					</ul> <!-- /.dropdown-user --></li>
+				<!-- /.dropdown -->
+			</ul>
+			<!-- /.navbar-top-links -->
+
+			<div class="navbar-default sidebar" role="navigation">
+				<div class="sidebar-nav navbar-collapse">
+					<ul class="nav" id="side-menu">
+						<li class="sidebar-search">
+							<div class="input-group custom-search-form">
+								<input type="text" class="form-control" placeholder="Search...">
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="button">
+										<i class="fa fa-search"></i>
+									</button>
+								</span>
+							</div> <!-- /input-group -->
+						</li>
+						<li><a href="dashboard.html"><i
+								class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+
+						<li><a href="products.html"><i class="fa fa-list-alt"></i>
+								Products</a></li>
+						<li><a href="salesinvoice.html"><i
+								class="fa  fa-credit-card"></i> Sales Invoice</a></li>
+
+
+					</ul>
+				</div>
+				<!-- /.sidebar-collapse -->
+			</div>
+			<!-- /.navbar-static-side -->
+		</nav>
+
+		<div id="page-wrapper">
+			<div class="row">
+				<div class="col-lg-10" style="margin: 20px">
+					<h1 class="page-header" style="display: inline;">Sales Invoice Panel</h1>
+					<button id="generateBill" class="btn btn-success" style="float: right;width: 200px;height: 50px;">Generate BIll</button>
+				</div>
+				<!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+			<div class="row">
+				<div class="col-lg-12">
+
+					<!-- Sales Invoice Datagrid -->
+					<table id="dg" title="Sales Invoice" class="easyui-datagrid"
+						style="width: 900px; height: 400px" toolbar="#toolbar"
+						pagination="false" rownumbers="true" fitColumns="true"
+						singleSelect="true" footer='#footer'>
+						<thead>
+							
+						</thead>
+					</table>
+					<div id="toolbar">
+						<div style="padding: 5px;">
+							<label>Customer Name: </label><input type="text"
+								style="margin: 5px;" value="Walk In Customer" name="cust-name" id="cust-name"> <label>Customer
+								Contact: </label><input type="text" style="margin: 5px;" name="cust-mobile" id="cust-mobile"> <label>Customer
+								Address: </label>
+							<textarea style="margin: 5px; vertical-align: middle;" cols="30" name="cust-address" id="cust-address"></textarea>
+						</div>
+						<div style="padding: 5px;">
+							<label>Scanner: </label><input name="scanner-barcode"
+								id="scanner-barcode" type="text"
+								style="margin: 5px; width: 200px; height: 30px"
+								placeholder="click here to scan">
+						</div>
+
+						<!-- <a href="javascript:void(0)" class="easyui-linkbutton"
+							iconCls="icon-add" plain="true" onclick="newProduct()">New
+							Product</a> <a href="javascript:void(0)" class="easyui-linkbutton"
+							iconCls="icon-edit" plain="true" onclick="editProduct()">Edit
+							Product</a> <a href="javascript:void(0)" class="easyui-linkbutton"
+							iconCls="icon-remove" plain="true" onclick="destroyProduct()">Remove
+							Product</a> -->
+					</div>
+					<div id="footer" style="padding: 15px;">
+
+						<div style="float: right; margin-right: 130px;">
+							<span style="font-weight: bolder;">Net Ammout: </span><span
+								style="font-weight: bolder;" id="totalAmt">0.0</span>
+						</div>
+					</div>
+
+
+				</div>
+				<!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+
+			<!-- /.row -->
+		</div>
+		<!-- /#page-wrapper -->
+
+	</div>
+	<!-- /#wrapper -->
+
+
+
+	<!-- Bootstrap Core JavaScript -->
+	<script src="js/bootstrap/bootstrap.min.js"></script>
+
+
+
+	<script type="text/javascript">
+		$(function() {
+			$('#dg')
+					.datagrid(
+							{
+								idField : 'barcode',
+								columns : [ [
+										{
+											field : 'barcode',
+											title : 'Barcode',
+											width : 50
+										},
+										{
+											field : 'name',
+											title : 'Product Name',
+											width : 50,
+											editor : 'text'
+										},
+										{
+											field : 'size',
+											title : 'Size',
+											width : 50,
+											align : 'right',
+											editor : 'text'
+										},
+										{
+											field : 'qty',
+											title : 'Qty',
+											width : 50,
+											align : 'right',
+											editor : 'numberbox'
+										},
+										{
+											field : 'price',
+											title : 'Price',
+											width : 50,
+											editor : 'numberbox'
+										},
+										{
+											field : 'discount',
+											title : 'Discount',
+											width : 50,
+											editor : {
+												type : 'numberbox',
+												options : {
+													precision : 1
+												}
+											}
+										},
+										{
+											field : 'finalamt',
+											title : 'Final Amount',
+											width : 50
+										},
+										{
+											field : 'action',
+											title : 'Action',
+											width : 80,
+											align : 'center',
+											formatter : function(value, row,
+													index) {
+												if (row.editing) {
+													var s = '<a href="javascript:void(0)" onclick="saverow(this)">Save</a> | ';
+													var c = '<a href="javascript:void(0)" onclick="cancelrow(this)">Cancel</a>';
+													return s + c;
+												} else {
+													var e = '<a href="javascript:void(0)" onclick="editrow(this)">Edit</a> | ';
+													var d = '<a href="javascript:void(0)" onclick="deleterow(this)">Delete</a>';
+													return e + d;
+												}
+											}
+										}
+
+								] ],
+								onEndEdit : function(index, row) {
+									var ed = $(this).datagrid('getEditor', {
+										index : index,
+										field : 'productid'
+									});
+									console.log(row);
+
+									totalPrice = totalPrice - row.finalamt;
+									row.finalamt = (row.qty * row.price)
+											- row.discount;
+									totalPrice += row.finalamt;
+
+									//$("#dg").datagrid('reloadFooter', [{name:'Total Price',finalamt:totalPrice,action:'   '}]);
+
+									$("#totalAmt").html(totalPrice);
+
+									$("#dg").datagrid('refreshRow', index);
+
+								},
+
+								onBeforeEdit : function(index, row) {
+									row.editing = true;
+									$(this).datagrid('refreshRow', index);
+								},
+								onAfterEdit : function(index, row) {
+									row.editing = false;
+									$(this).datagrid('refreshRow', index);
+								},
+								onCancelEdit : function(index, row) {
+									row.editing = false;
+									$(this).datagrid('refreshRow', index);
+								}
+
+							}).datagrid('enableCellEditing').datagrid(
+							'gotoCell', {
+								index : 0,
+								field : 'barcode'
+							});
+
+		});
+		function editrow(index) {
+			console.log("edit");
+		}
+
+		function saverow(index) {
+			console.log("save");
+		}
+
+		function deleterow(index) {
+			console.log(index);
+
+			var tr = $(index).closest('tr.datagrid-row');
+			var rid = parseInt(tr.attr('datagrid-row-index'));
+			console.log(rid);
+
+			var rows = $('#dg').datagrid('getRows');
+			console.log(rows);
+
+			var myrow = rows[rid];
+
+			console.log(myrow);
+			
+			$.messager.confirm('Confirm', 'Are you sure?', function(r) {
+				if (r) {
+					$('#dg').datagrid('deleteRow', rid);
+
+					totalPrice = totalPrice - myrow.finalamt;
+					
+
+					console.log(totalPrice);
+					
+					//$("#dg").datagrid('reloadFooter', [{name:'Total Price',finalamt:totalPrice,action:'   '}]);
+
+					$("#totalAmt").html(totalPrice);
+
+				}
+			});
+		}
+	</script>
+
+
+
+
+	<script type="text/javascript">
+		var totalPrice = 0.0;
+
+		$(function($) {
+
+			$.fn.extend({
+				donetyping : function(callback, timeout) {
+					timeout = timeout || 1e3; // 1 second default timeout
+					var timeoutReference, doneTyping = function(el) {
+						if (!timeoutReference)
+							return;
+						timeoutReference = null;
+						callback.call(el);
+					};
+					return this.each(function(i, el) {
+						var $el = $(el);
+						// Chrome Fix (Use keyup over keypress to detect backspace)
+						// thank you @palerdot
+						$el.is(':input')
+								&& $el.on('keyup keypress paste', function(e) {
+									// This catches the backspace button in chrome, but also prevents
+									// the event from triggering too preemptively. Without this line,
+									// using tab/shift+tab will make the focused element fire the callback.
+									if (e.type == 'keyup' && e.keyCode != 8)
+										return;
+
+									// Check if timeout has been set. If it has, "reset" the clock and
+									// start over again.
+									if (timeoutReference)
+										clearTimeout(timeoutReference);
+									timeoutReference = setTimeout(function() {
+										// if we made it here, our timeout has elapsed. Fire the
+										// callback
+										doneTyping(el);
+									}, timeout);
+								}).on('blur', function() {
+									// If we can, fire the event since we're leaving the field
+									doneTyping(el);
+								});
+					});
+				}
+			});
+
+			$('#scanner-barcode')
+					.donetyping(
+							function() {
+
+								$.messager.progress();
+								$
+										.ajax({
+
+											headers : {
+												'Accept' : 'application/json',
+												'Content-Type' : 'application/json'
+											},
+											url : "productActions.html/getProductByBarcode?barcode="
+													+ $("#scanner-barcode")
+															.val(),
+											type : "POST",
+											success : function(res) {
+												console.log(res);
+												if (typeof res.barcode !== "undefined") {
+
+													var _prototypeObj = res;
+
+													_prototypeObj.qty = 1;
+
+													_prototypeObj['discount'] = '0.0';
+
+													_prototypeObj['finalamt'] = (_prototypeObj.qty * _prototypeObj.price)
+															- _prototypeObj.discount;
+
+													totalPrice += _prototypeObj.finalamt;
+
+													//$("#dg").datagrid('reloadFooter', [{name:'Total Price',finalamt:totalPrice,action:'   '}]);
+
+													$("#totalAmt").html(
+															totalPrice);
+
+													$('#dg').datagrid(
+															'appendRow',
+															_prototypeObj);
+
+												} else {
+													$.messager
+															.show({ // show
+																// error
+																// message
+																title : 'Error',
+																msg : "No product found!"
+															});
+												}
+												$.messager.progress('close');
+												$("#scanner-barcode").val('');
+											},
+											error : function(res) {
+												$.messager.progress('close');
+												$("#scanner-barcode").val('');
+											}
+										});
+
+							});
+
+		});
+	</script>
+
+<script type="text/javascript">
+
+$(function(){
+			
+$("#generateBill").on('click',function(ev){
+	
+	console.log(totalPrice);
+	var dataRows = $('#dg').datagrid('getRows');
+	console.log(dataRows);
+	
+	var customer={};
+	customer['customerName']=$('#cust-name').val();
+	customer['customerMobile']=$('#cust-mobile').val();
+	customer['customerAddress']=$('#cust-address').val();
+	
+	console.log(customer);
+	
+	var billData={};
+	
+	billData['customer']=customer;
+	billData['invoiceProduct']=dataRows;
+	billData['totalAmount']=totalPrice;
+	
+	console.log(billData);
+	
+
+});
+	
+	
+});
+
+
+</script>
+
+</body>
+
+</html>
