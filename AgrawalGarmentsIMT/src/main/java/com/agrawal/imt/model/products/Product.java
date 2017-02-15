@@ -17,6 +17,8 @@ public class Product {
 	@Column
 	private double price;
 	@Column
+	private double discount;
+	@Column
 	private String color;
 	@Column
 	private String size;
@@ -30,20 +32,19 @@ public class Product {
 		// TODO Auto-generated constructor stub
 	}
 
-	
-	public Product(long id, long barcode, String name, double price, String color, String size, String description,
-			int qty) {
+	public Product(long id, long barcode, String name, double price, double discount, String color, String size,
+			String description, int qty) {
 		super();
 		this.id = id;
 		this.barcode = barcode;
 		this.name = name;
 		this.price = price;
+		this.discount = discount;
 		this.color = color;
 		this.size = size;
 		this.description = description;
 		this.qty = qty;
 	}
-
 
 	public long getId() {
 		return id;
@@ -101,22 +102,27 @@ public class Product {
 		this.qty = qty;
 	}
 
-
 	public long getBarcode() {
 		return barcode;
 	}
-
 
 	public void setBarcode(long barcode) {
 		this.barcode = barcode;
 	}
 
+	public double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(double discount) {
+		this.discount = discount;
+	}
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", barcode=" + barcode + ", name=" + name + ", price=" + price + ", color=" + color
-				+ ", size=" + size + ", description=" + description + ", qty=" + qty + "]";
+		return "Product [id=" + id + ", barcode=" + barcode + ", name=" + name + ", price=" + price + ", discount="
+				+ discount + ", color=" + color + ", size=" + size + ", description=" + description + ", qty=" + qty
+				+ "]";
 	}
 
-	
 }

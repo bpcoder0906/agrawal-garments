@@ -30,8 +30,8 @@
 	href="http://www.jeasyui.com/easyui/themes/icon.css">
 <link rel="stylesheet" type="text/css"
 	href="http://www.jeasyui.com/easyui/themes/color.css">
-<!-- <link rel="stylesheet" type="text/css"
-	href="http://www.jeasyui.com/easyui/demo/demo.css"> -->
+<link rel="stylesheet" type="text/css"
+	href="http://www.jeasyui.com/easyui/demo/demo.css">
 
 
 <!-- jQuery -->
@@ -48,7 +48,6 @@
 	margin: 0;
 	padding: 10px 30px;
 }
-
 .ftitle {
 	font-size: 14px;
 	font-weight: bold;
@@ -56,21 +55,17 @@
 	margin-bottom: 10px;
 	border-bottom: 1px solid #ccc;
 }
-
 .fitem {
 	margin-bottom: 5px;
 }
-
 .fitem label {
 	display: inline-block;
 	width: 200px;
 }
-
 .fitem input {
 	width: 260px;
 	height: 30px;
 }
-
 .fitem textarea {
 	width: 260px;
 	height: 50px;
@@ -150,7 +145,6 @@
 			<!-- /.row -->
 			<div class="row">
 				<div class="col-lg-12">
-
 					<!-- Sales Invoice Datagrid -->
 					<table id="dg" title="Sales Invoice" class="easyui-datagrid"
 						style="width: 900px; height: 400px" toolbar="#toolbar"
@@ -166,13 +160,13 @@
 								style="margin: 5px;" value="Walk In Customer" name="cust-name" id="cust-name"> <label>Customer
 								Contact: </label><input type="text" style="margin: 5px;" name="cust-mobile" id="cust-mobile"> <label>Customer
 								Address: </label>
-							<textarea style="margin: 5px; vertical-align: middle;" cols="30" name="cust-address" id="cust-address"></textarea>
+							<textarea style="vertical-align: middle;" cols="20" name="cust-address" id="cust-address"></textarea>
 						</div>
 						<div style="padding: 5px;">
 							<label>Scanner: </label><input name="scanner-barcode"
 								id="scanner-barcode" type="text"
 								style="margin: 5px; width: 200px; height: 30px"
-								placeholder="click here to scan">
+								placeholder="click here to scan" autofocus>
 						</div>
 
 						<!-- <a href="javascript:void(0)" class="easyui-linkbutton"
@@ -283,7 +277,6 @@
 												}
 											}
 										}
-
 								] ],
 								onEndEdit : function(index, row) {
 									var ed = $(this).datagrid('getEditor', {
@@ -291,20 +284,14 @@
 										field : 'productid'
 									});
 									console.log(row);
-
 									totalPrice = totalPrice - row.finalamt;
 									row.finalamt = (row.qty * row.price)
 											- row.discount;
 									totalPrice += row.finalamt;
-
 									//$("#dg").datagrid('reloadFooter', [{name:'Total Price',finalamt:totalPrice,action:'   '}]);
-
 									$("#totalAmt").html(totalPrice);
-
 									$("#dg").datagrid('refreshRow', index);
-
 								},
-
 								onBeforeEdit : function(index, row) {
 									row.editing = true;
 									$(this).datagrid('refreshRow', index);
@@ -317,49 +304,37 @@
 									row.editing = false;
 									$(this).datagrid('refreshRow', index);
 								}
-
 							}).datagrid('enableCellEditing').datagrid(
 							'gotoCell', {
 								index : 0,
 								field : 'barcode'
 							});
-
 		});
 		function editrow(index) {
 			console.log("edit");
 		}
-
 		function saverow(index) {
 			console.log("save");
 		}
-
 		function deleterow(index) {
 			console.log(index);
-
 			var tr = $(index).closest('tr.datagrid-row');
 			var rid = parseInt(tr.attr('datagrid-row-index'));
 			console.log(rid);
-
 			var rows = $('#dg').datagrid('getRows');
 			console.log(rows);
-
 			var myrow = rows[rid];
-
 			console.log(myrow);
 			
 			$.messager.confirm('Confirm', 'Are you sure?', function(r) {
 				if (r) {
 					$('#dg').datagrid('deleteRow', rid);
-
 					totalPrice = totalPrice - myrow.finalamt;
 					
-
 					console.log(totalPrice);
 					
 					//$("#dg").datagrid('reloadFooter', [{name:'Total Price',finalamt:totalPrice,action:'   '}]);
-
 					$("#totalAmt").html(totalPrice);
-
 				}
 			});
 		}
@@ -370,9 +345,7 @@
 
 	<script type="text/javascript">
 		var totalPrice = 0.0;
-
 		$(function($) {
-
 			$.fn.extend({
 				donetyping : function(callback, timeout) {
 					timeout = timeout || 1e3; // 1 second default timeout
@@ -393,7 +366,6 @@
 									// using tab/shift+tab will make the focused element fire the callback.
 									if (e.type == 'keyup' && e.keyCode != 8)
 										return;
-
 									// Check if timeout has been set. If it has, "reset" the clock and
 									// start over again.
 									if (timeoutReference)
@@ -410,15 +382,12 @@
 					});
 				}
 			});
-
 			$('#scanner-barcode')
 					.donetyping(
 							function() {
-
 								$.messager.progress();
 								$
 										.ajax({
-
 											headers : {
 												'Accept' : 'application/json',
 												'Content-Type' : 'application/json'
@@ -430,27 +399,18 @@
 											success : function(res) {
 												console.log(res);
 												if (typeof res.barcode !== "undefined") {
-
 													var _prototypeObj = res;
-
 													_prototypeObj.qty = 1;
-
 													_prototypeObj['discount'] = '0.0';
-
 													_prototypeObj['finalamt'] = (_prototypeObj.qty * _prototypeObj.price)
 															- _prototypeObj.discount;
-
 													totalPrice += _prototypeObj.finalamt;
-
 													//$("#dg").datagrid('reloadFooter', [{name:'Total Price',finalamt:totalPrice,action:'   '}]);
-
 													$("#totalAmt").html(
 															totalPrice);
-
 													$('#dg').datagrid(
 															'appendRow',
 															_prototypeObj);
-
 												} else {
 													$.messager
 															.show({ // show
@@ -460,6 +420,7 @@
 																msg : "No product found!"
 															});
 												}
+												
 												$.messager.progress('close');
 												$("#scanner-barcode").val('');
 											},
@@ -468,44 +429,63 @@
 												$("#scanner-barcode").val('');
 											}
 										});
-
 							});
-
 		});
 	</script>
 
 <script type="text/javascript">
-
 $(function(){
 			
 $("#generateBill").on('click',function(ev){
-	
+	 $.messager.progress();
 	console.log(totalPrice);
 	var dataRows = $('#dg').datagrid('getRows');
 	console.log(dataRows);
 	
 	var customer={};
-	customer['customerName']=$('#cust-name').val();
-	customer['customerMobile']=$('#cust-mobile').val();
-	customer['customerAddress']=$('#cust-address').val();
+	customer['name']=$('#cust-name').val();
+	customer['contact']=$('#cust-mobile').val();
+	customer['address']=$('#cust-address').val();
 	
 	console.log(customer);
 	
 	var billData={};
 	
 	billData['customer']=customer;
-	billData['invoiceProduct']=dataRows;
+	billData['cartProducts']=dataRows;
 	billData['totalAmount']=totalPrice;
 	
 	console.log(billData);
 	
+	$.ajax( {
 
+		headers : {
+
+			'Content-Type' : 'application/json',
+			'Accept' : 'application/json'
+		},
+		url :"shopActions.html/generateInvoice",
+		type: "POST",
+		data : JSON.stringify(billData),
+		dataType : 'json',
+		success : function ( data ) {
+			alert( data );
+			setTimeout(function(){ 
+				$.messager.progress('close');
+				window.open("invoice.html", '_blank');
+				location.reload();
+				
+			}, 600);
+		},
+		error : function (d) {
+			alert(d);
+		}
+	} );
+	
 });
 	
 	
 });
-
-
 </script>
 
 </body>
